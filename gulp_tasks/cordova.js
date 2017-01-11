@@ -19,15 +19,15 @@ const environmentConfig = require('../conf/environments.json');
 // Cordova Android platform tasks
 // ==============================
 gulp.task('cordova:platform:android:rm', function (cb) {
-  runCordovaCommand('cordova', ['platform', 'rm', 'android'], cb);
+  runCordovaCommand(['platform', 'rm', 'android'], cb);
 });
 
 gulp.task('cordova:platform:android:add', function (cb) {
-  runCordovaCommand('cordova', ['platform', 'add', 'android'], cb);
+  runCordovaCommand(['platform', 'add', 'android'], cb);
 });
 
 gulp.task('cordova:platform:android:build:prepare', function (cb) {
-  runCordovaCommand('cordova', ['prepare', 'android'], cb);
+  runCordovaCommand(['prepare', 'android'], cb);
 });
 
 gulp.task('cordova:platform:android:build:filter', function () {
@@ -39,7 +39,7 @@ gulp.task('cordova:platform:android:build:filter', function () {
 });
 
 gulp.task('cordova:platform:android:build:compile', function (cb) {
-  runCordovaCommand('cordova', ['compile', 'android'], cb);
+  runFastlaneCommand(['android', conf.environment()], cb);
 });
 
 gulp.task('cordova:platform:android:build', gulp.series(
@@ -58,15 +58,15 @@ gulp.task('cordova:platform:android', gulp.series(
 // Cordova iOS platform tasks
 // ==============================
 gulp.task('cordova:platform:ios:rm', function (cb) {
-  runCordovaCommand('cordova', ['platform', 'rm', 'ios'], cb);
+  runCordovaCommand(['platform', 'rm', 'ios'], cb);
 });
 
 gulp.task('cordova:platform:ios:add', function (cb) {
-  runCordovaCommand('cordova', ['platform', 'add', 'ios'], cb);
+  runCordovaCommand(['platform', 'add', 'ios'], cb);
 });
 
 gulp.task('cordova:platform:ios:build', function (cb) {
-  runCordovaCommand('cordova', ['build', 'ios'], cb);
+  runFastlaneCommand(['ios', conf.environment()], cb);
 });
 
 gulp.task('cordova:platform:ios', gulp.series(
@@ -137,16 +137,31 @@ gulp.task('cordova:build', gulp.series(
 // Functions used by tasks
 // ==============================
 
-function runCordovaCommand(command, args, callback) {
+function runCordovaCommand(args, callback) {
   const execOptions = {
     cwd: conf.paths.cordova
   };
-  let build = spawn(command, args, execOptions);
+  let build = spawn('cordova', args, execOptions);
   build.stdout.on('data', (data) => {
-    console.log(data.toString());
+    console.log(data.toString().trim());
   });
   build.stderr.on('data', (data) => {
-    console.log(gutil.colors.red(data.toString()));
+    console.log(gutil.colors.red(data.toString().trim() ));
+  });
+  build.on('close', (code) => {
+    callback(code);
+  });
+}
+
+function runFastlaneCommand(args, callback) {
+  const execOptions = {
+  };
+  let build = spawn('fastlane', args, execOptions);
+  build.stdout.on('data', (data) => {
+    console.log(data.toString().trim());
+  });
+  build.stderr.on('data', (data) => {
+    console.log(gutil.colors.red(data.toString().trim()));
   });
   build.on('close', (code) => {
     callback(code);

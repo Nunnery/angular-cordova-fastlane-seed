@@ -1,0 +1,55 @@
+# More documentation about how to customize your build
+# can be found here:
+# https://docs.fastlane.tools
+fastlane_version "1.109.0"
+
+default_platform :android
+
+platform :android do
+  lane :development do
+    assemble(release: false)
+  end
+
+  lane :production do
+    assemble(release: true)
+  end
+
+  private_lane :assemble do |options|
+    task = (options[:release] ? 'assembleRelease' : 'assembleDebug')
+    gradle(task: task, project_dir: 'cordova/platforms/android')
+  end
+end
+
+platform :ios do
+  lane :development do |options|
+    passed_options = options
+    passed_options[:release] = false
+    assemble(passed_options)
+  end
+
+  lane :production do |options|
+  end
+
+  private_lane :assemble do |options|
+    app_name = (options[:app_name] ? options[:app_name] : 'MyAwesomeApp')
+    export_type = (options[:release] ? 'app-store' : 'development')
+    code_signing_identity = (options[:identity] ? options[:identity] : 'MyAwesomeIdentity')
+    if options[:scheme]
+      gym(
+        project: 'cordova/platforms/ios/' + app_name + '.xcodeproj',
+        scheme: options[:scheme],
+        use_legacy_build_api: 'true',
+        export_method: export_type,
+        codesigning_identity: code_signing_identity
+      )
+    else
+      gym(
+        project: 'cordova/platforms/ios/' + app_name + '.xcodeproj',
+        scheme: app_name,
+        use_legacy_build_api: 'true',
+        export_method: export_type,
+        codesigning_identity: code_signing_identity
+      )
+    end
+  end
+end
