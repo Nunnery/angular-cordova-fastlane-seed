@@ -12,8 +12,8 @@ const path = require('path');
 const gutil = require('gulp-util');
 const _ = require('lodash');
 
-const environments = ['development', 'production'];
-const brands = ['MyAwesomeApp'];
+const environments = Object.keys(require('./environments.json'));
+const brands = Object.keys(require('./brands.json'));
 
 exports.ngModule = 'app';
 
