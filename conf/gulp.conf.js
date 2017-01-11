@@ -10,6 +10,10 @@
 
 const path = require('path');
 const gutil = require('gulp-util');
+const _ = require('lodash');
+
+const environments = ['development', 'production'];
+const brands = ['MyAwesomeApp'];
 
 exports.ngModule = 'app';
 
@@ -21,7 +25,9 @@ exports.paths = {
   dist: 'dist',
   tmp: '.tmp',
   e2e: 'e2e',
-  tasks: 'gulp_tasks'
+  tasks: 'gulp_tasks',
+  cordova: 'cordova',
+  templates: 'templates'
 };
 
 exports.path = {};
@@ -45,6 +51,7 @@ exports.errorHandler = function (title) {
     this.emit('end');
   };
 };
+
 /**
  *  Wiredep is the lib which inject bower dependencies in your project
  *  Mainly used to inject script tags in the index.html but also used
@@ -53,4 +60,39 @@ exports.errorHandler = function (title) {
 exports.wiredep = {
   exclude: [/\/bootstrap\.js$/, /\/bootstrap-sass\/.*\.js/, /\/bootstrap\.css/],
   directory: 'bower_components'
+};
+
+/**
+ * Parses the command string given to Gulp to find which environment is being built for.
+ *
+ * Reads from the --env command flag.
+ *
+ * @return {string}
+ */
+exports.environment = function() {
+  let env = gutil.env.env || environments[0];
+  return _.includes(environments, env) ? env : environments[0];
+};
+
+/**
+ * Parses the command string given to Gulp to find which brand is being built for.
+ *
+ * Reads from the --brand command flag.
+ *
+ * @return {string}
+ */
+exports.brand = function() {
+  let brand = gutil.env.brand || brands[0];
+  return _.includes(brands, brand) ? brand : brands[0];
+};
+
+/**
+ * Parses the command string given to Gulp to find which feature is being built for.
+ *
+ * Reads from the --feature command flag.
+ *
+ * @return {string}
+ */
+exports.feature = function() {
+  return gutil.env.feature || '';
 };
