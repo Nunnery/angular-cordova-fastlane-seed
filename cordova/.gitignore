@@ -4,6 +4,5 @@ www/*
 !www/.keep
 
 platforms/*
-!platforms/platforms.json
 
 plugins/*
