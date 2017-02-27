@@ -1,14 +1,36 @@
+const path = require('path');
 const gulp = require('gulp');
 const eslint = require('gulp-eslint');
+const ngConfig = require('gulp-ng-config');
+const merge = require('merge-stream');
 
 const conf = require('../conf/gulp.conf');
 
-gulp.task('scripts', scripts);
+gulp.task('scripts:lint', scriptsLint);
+gulp.task('scripts:copy', scriptsCopy);
 
-function scripts() {
+gulp.task('scripts:generate:config', scriptsGenerateConfig)
+gulp.task('scripts:generate', gulp.parallel('scripts:generate:config'));
+
+gulp.task('scripts', gulp.parallel('scripts:lint', 'scripts:copy', 'scripts:generate'));
+
+function scriptsLint() {
   return gulp.src(conf.path.src('**/*.js'))
     .pipe(eslint())
-    .pipe(eslint.format())
+    .pipe(eslint.format());
+}
 
+function scriptsCopy() {
+  return gulp.src(conf.path.src('**/*.js'))
     .pipe(gulp.dest(conf.path.tmp()));
+}
+
+function scriptsGenerateConfig() {
+  const brandConfig = gulp.src('./conf/brands.json')
+    .pipe(ngConfig('app.config.brand', {environment: conf.brand()}))
+    .pipe(gulp.dest(path.join(conf.paths.tmp, '/app/config')));
+  const environmentConfig = gulp.src('./conf/environments.json')
+    .pipe(ngConfig('app.config.environment', {environment: conf.environment()}))
+    .pipe(gulp.dest(path.join(conf.paths.tmp, '/app/config')));
+  return merge(brandConfig, environmentConfig);
 }
