@@ -28,7 +28,7 @@ function scriptsProcess() {
 }
 
 function scriptsGenerateConfig() {
-  const brandConfig = ngConfigGeneration('./conf/brand.json', 'app.config.brand', {environment: conf.brand()});
+  const brandConfig = ngConfigGeneration('./conf/brands.json', 'app.config.brand', {environment: conf.brand()});
   const environmentConfig = ngConfigGeneration('./conf/environments.json', 'app.config.environment', {environment: conf.environment()});
 
   return merge(brandConfig, environmentConfig);
