@@ -10,6 +10,7 @@ const sourcemaps = require('gulp-sourcemaps');
 const uglifySaveLicense = require('uglify-save-license');
 const inject = require('gulp-inject');
 const ngAnnotate = require('gulp-ng-annotate');
+const stripDebug = require('gulp-strip-debug');
 
 const conf = require('../conf/gulp.conf');
 
@@ -32,6 +33,7 @@ function build() {
     .pipe(useref())
     .pipe(jsFilter)
     .pipe(sourcemaps.init())
+    .pipe(stripDebug())
     .pipe(ngAnnotate())
     .pipe(uglify({preserveComments: uglifySaveLicense})).on('error', conf.errorHandler('Uglify'))
     .pipe(sourcemaps.write('maps'))
