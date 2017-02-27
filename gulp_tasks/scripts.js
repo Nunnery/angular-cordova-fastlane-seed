@@ -3,16 +3,17 @@ const gulp = require('gulp');
 const eslint = require('gulp-eslint');
 const ngConfig = require('gulp-ng-config');
 const merge = require('merge-stream');
+const preprocess = require('gulp-preprocess');
 
 const conf = require('../conf/gulp.conf');
 
 gulp.task('scripts:lint', scriptsLint);
-gulp.task('scripts:copy', scriptsCopy);
+gulp.task('scripts:copy', scriptsProcess);
 
 gulp.task('scripts:generate:config', scriptsGenerateConfig)
 gulp.task('scripts:generate', gulp.parallel('scripts:generate:config'));
 
-gulp.task('scripts', gulp.parallel('scripts:lint', 'scripts:copy', 'scripts:generate'));
+gulp.task('scripts', gulp.parallel('scripts:lint', 'scripts:process', 'scripts:generate'));
 
 function scriptsLint() {
   return gulp.src(conf.path.src('**/*.js'))
@@ -20,8 +21,9 @@ function scriptsLint() {
     .pipe(eslint.format());
 }
 
-function scriptsCopy() {
+function scriptsProcess() {
   return gulp.src(conf.path.src('**/*.js'))
+    .pipe(preprocess())
     .pipe(gulp.dest(conf.path.tmp()));
 }
 
