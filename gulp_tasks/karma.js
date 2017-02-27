@@ -14,14 +14,16 @@ function karmaFinishHandler(done) {
   };
 }
 
-function karmaSingleRun(done) {
-  const configFile = path.join(process.cwd(), 'conf', 'karma.conf.js');
+function karmaRun(done, auto) {
+  const configFile = path.join(process.cwd(), 'conf', auto ? 'karma-auto.conf.js' : 'karma.conf.js');
   const karmaServer = new karma.Server({configFile}, karmaFinishHandler(done));
   karmaServer.start();
 }
 
+function karmaSingleRun(done) {
+  karmaRun(done, false);
+}
+
 function karmaAutoRun(done) {
-  const configFile = path.join(process.cwd(), 'conf', 'karma-auto.conf.js');
-  const karmaServer = new karma.Server({configFile}, karmaFinishHandler(done));
-  karmaServer.start();
+  karmaRun(done, true);
 }

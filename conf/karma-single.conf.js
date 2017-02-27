@@ -7,8 +7,8 @@ const _ = require('lodash');
 
 module.exports = function (config) {
   const configuration = _.merge({}, karmaConf, {
-    singleRun: false,
-    autoWatch: true
+    singleRun: true,
+    autoWatch: false
   });
 
   config.set(configuration);
