@@ -2,7 +2,7 @@ language: java
 jdk:
 - oraclejdk8
 before_install:
-- rvm use 2.3.1
+- rvm use 2.3.1 --install --binary --fuzzy
 - nvm install stable
 - npm install -g bower
 install:
