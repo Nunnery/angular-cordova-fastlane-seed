@@ -28,11 +28,14 @@ function scriptsProcess() {
 }
 
 function scriptsGenerateConfig() {
-  const brandConfig = gulp.src('./conf/brands.json')
-    .pipe(ngConfig('app.config.brand', {environment: conf.brand()}))
-    .pipe(gulp.dest(path.join(conf.paths.tmp, '/app/config')));
-  const environmentConfig = gulp.src('./conf/environments.json')
-    .pipe(ngConfig('app.config.environment', {environment: conf.environment()}))
-    .pipe(gulp.dest(path.join(conf.paths.tmp, '/app/config')));
+  const brandConfig = ngConfigGeneration('./conf/brand.json', 'app.config.brand', {environment: conf.brand()});
+  const environmentConfig = ngConfigGeneration('./conf/environments.json', 'app.config.environment', {environment: conf.environment()});
+
   return merge(brandConfig, environmentConfig);
+}
+
+function ngConfigGeneration(file, module, args) {
+  return gulp.src(file)
+    .pipe(ngConfig(module, args))
+    .pipe(gulp.dest(path.join(conf.paths.tmp, '/app/config')));
 }

@@ -142,30 +142,14 @@ function runCordovaCommand(args, callback) {
     cwd: conf.paths.cordova
   };
   let build = spawn('cordova', args, execOptions);
-  build.stdout.on('data', (data) => {
-    console.log(data.toString().trim());
-  });
-  build.stderr.on('data', (data) => {
-    console.log(gutil.colors.red(data.toString().trim() ));
-  });
-  build.on('close', (code) => {
-    callback(code);
-  });
+  streamOutput(build, callback);
 }
 
 function runFastlaneCommand(args, callback) {
   const execOptions = {
   };
   let build = spawn('fastlane', args, execOptions);
-  build.stdout.on('data', (data) => {
-    console.log(data.toString().trim());
-  });
-  build.stderr.on('data', (data) => {
-    console.log(gutil.colors.red(data.toString().trim()));
-  });
-  build.on('close', (code) => {
-    callback(code);
-  });
+  streamOutput(build, callback);
 }
 
 function getWidgetName() {
@@ -183,4 +167,16 @@ function getWidgetName() {
 
 function replaceAndroidContent(content) {
   return content.replace(/base href="\/"/g, 'base href="file:///android_asset/www/"');
+}
+
+function streamOutput(stream, callback) {
+  stream.stdout.on('data', (data) => {
+    console.log(data.toString().trim());
+  });
+  stream.stderr.on('data', (data) => {
+    console.log(gutil.colors.red(data.toString().trim()));
+  });
+  stream.on('close', (code) => {
+    callback(code);
+  });
 }
