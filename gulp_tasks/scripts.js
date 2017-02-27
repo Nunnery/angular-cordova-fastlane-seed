@@ -8,9 +8,9 @@ const preprocess = require('gulp-preprocess');
 const conf = require('../conf/gulp.conf');
 
 gulp.task('scripts:lint', scriptsLint);
-gulp.task('scripts:copy', scriptsProcess);
+gulp.task('scripts:process', scriptsProcess);
 
-gulp.task('scripts:generate:config', scriptsGenerateConfig)
+gulp.task('scripts:generate:config', scriptsGenerateConfig);
 gulp.task('scripts:generate', gulp.parallel('scripts:generate:config'));
 
 gulp.task('scripts', gulp.parallel('scripts:lint', 'scripts:process', 'scripts:generate'));
