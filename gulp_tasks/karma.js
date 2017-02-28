@@ -15,7 +15,7 @@ function karmaFinishHandler(done) {
 }
 
 function karmaRun(done, auto) {
-  const configFile = path.join(process.cwd(), 'conf', auto ? 'karma-auto.conf.js' : 'karma.conf.js');
+  const configFile = path.join(process.cwd(), 'conf', auto ? 'karma-auto.conf.js' : 'karma-single.conf.js');
   const karmaServer = new karma.Server({configFile}, karmaFinishHandler(done));
   karmaServer.start();
 }
