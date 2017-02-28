@@ -6,6 +6,7 @@ You need the below to use this seed:
 * Node >= 7.3.0 and NPM >= 3.0.0
 * JDK >= 8
 * Ruby >= 2.3.1
+* Gradle
 
 [Angular]: https://angularjs.org/
 [Cordova]: https://cordova.apache.org/

@@ -16,7 +16,8 @@ platform :android do
 
   private_lane :assemble do |options|
     task = (options[:release] ? 'assembleRelease' : 'assembleDebug')
-    gradle(task: task, project_dir: 'cordova/platforms/android')
+    gradle_binary = %x{which gradle}.chomp
+    gradle(task: task, project_dir: 'cordova/platforms/android', gradle_path: gradle_binary)
   end
 end
 
