@@ -91,7 +91,9 @@ gulp.task('cordova:template:config', function () {
       brandConfig: brandConfig[conf.brand()],
       environment: conf.environment(),
       environmentConfig: environmentConfig[conf.environment()],
-      widgetName: getWidgetName()
+      widgetName: getWidgetName(),
+      version: getVersion(),
+      build: getBuild()
     }))
     .pipe(template())
     .pipe(rename({
@@ -179,4 +181,20 @@ function streamOutput(stream, callback) {
   stream.on('close', (code) => {
     callback(code);
   });
+}
+
+function getBuild() {
+  let majorMinorPatch = getVersion().split('\.');
+  let vCode = 0;
+  let powerOfTen = 1;
+  majorMinorPatch.reverse().forEach((val) => {
+    vCode += parseInt(val) * powerOfTen;
+    powerOfTen *= 1000;
+  });
+  return vCode;
+}
+
+function getVersion() {
+  let pkg = require('../package.json');
+  return pkg.version;
 }
